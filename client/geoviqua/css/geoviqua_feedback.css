@@ -1,0 +1,23 @@
+
+
+
+.page-header-st {
+  width:100%;
+  background-image: url('../images/GeoViQuaSmall.png');
+  background-position: left center;
+  background-repeat: no-repeat;
+  height: 80px;
+  padding-top: 5px;
+  margin-right: 50px;
+  margin-left: 160px;
+  border-bottom: 0px solid #eeeeee;
+  text-align: center;
+}
+
+.bckg {
+    background-image: url('../images/demo.png');
+    background-repeat: repeat;
+
+}
+
+

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Feedback creation</title>
+    <meta name="author" content="Maud van den Broek"/>
+    <link rel="stylesheet" href="other/css/bootstrap.min.css" media="screen">
+    <link rel="shortcut icon" type="image/x-icon" href="geoviqua/geoviqua.ico">
+  </head>
+  <body>
+    <div class="page-header-st"></div>
+    <div class="container">
+      <input id="userId" name="userDetails" type="hidden" value="1"/>
+      <form id="full_form">
+      <div id="wizard" class="swMain">
+      <ul>
+        <li><a href="#step-1">
+          <label class="stepNumber"></label>
+          <span class="stepDesc">
+             User feedback
+          </span>
+        </a></li>
+        <li><a href="#step-2">
+          <label class="stepNumber"></label>
+          <span class="stepDesc">
+             Target
+          </span>
+        </a></li>
+        <li><a href="#step-3">
+          <label class="stepNumber"></label>
+          <span class="stepDesc">
+             User info
+          </span>
+        </a></li>
+        <li><a href="#step-4">
+          <label class="stepNumber"></label>
+          <span class="stepDesc">
+             Advanced
+          </span>
+        </a></li>
+      </ul>
+          <div id="step-1">
+            <h2 class="StepTitle">User Feedback</h2>
+            <p><label >Subject:</label><input id='subject' name='subject' type='text' required />
+            <span class="help-inline">Put here the title for your feedback item</span></p>
+            <p>
+              <label >Rating score: </label>
+            </p>
+            <div id="star">
+            </div>
+            <p><label >Rating justification: </label><textarea id="justification" name="justification" maxlength='1000' class="span5" rows=4></textarea></p>
+            <p>
+              <label >User Role: </label>
+              <select  id="userRole">
+                <option value="NonResearchEndUser">Basic User</option>
+                <option value="ResearchEndUser">Researcher</option>
+                <option value="ScientificDataProducer">Scientific Data Producer</option>
+                <option value="CommercialDataProducer">Commercial Data Producer</option>
+              </select>
+            </p>
+            <p><label >Comment: </label><textarea id='userComment' name='userComment' class="span5" rows='4' maxlength='1000'></textarea></p>
+            <p><label >DomainURN: </label></p>
+            <ul id="manyDomains" class="unstyled">
+              <li>
+                <div class="form-horizontal">
+                  <input class="span3" type="text" /><input type="button" class="btn" />
+                </div>
+              </li>
+            </ul>
+            <span class="help-block">Add the relevant scientific domains and themes</span>
+            <p><label >Tags: </label></p>
+            <ul id="manyTags" class="unstyled">
+              <li>
+                <div class="form-horizontal">
+                  <input type="text" /><input type="button" class="btn" />
+                </div>
+              </li>
+            </ul>
+            <span class="help-block">Adding tags helps other users to find relevant feedback</span>
+          </div>
+          <div id="step-2">
+            <h2 class="StepTitle">Target specification</h2>
+            <fieldset>
+              <legend><small>Target identification</small></legend>
+              <p><label >Target code</label><input id="primaryTargetCode" name="primaryTargetCode" value="Not defined." readonly="true"/></p>
+              <p><label >Target codespace</label><input id="primaryTargetCodeSpace" name="primaryTargetCodespace" value="Not defined." readonly="true"/></p>
+              <p><label >Nature of the target </label>
+                <select id="natureOfTarget" disabled="disabled">
+                  <option value=''>unknown</option>
+                  <option value='attribute'>attribute</option>
+                  <option value='activity'>activity</option>
+                  <option value='document'>document</option>
+                  <option value='metadataDocument'>metadataDocument</option>
+                  <option value='attributeType'>attributeType</option>
+                  <option value='collectionHardware'>collectionHardware</option>
+                  <option value='collectionSession'>collectionSession</option>
+                  <option value='dataset'>dataset</option>
+                  <option value='series'>series</option>
+                  <option value='nonGeographicDataset'>nonGeographicDataset</option>
+                  <option value='dimensionGroup'>dimensionGroup</option>
+                  <option value='feature'>feature</option>
+                  <option value='featureType'>featureType</option>
+                  <option value='propertyType'>propertyType</option>
+                  <option value='fieldSession'>fieldSession</option>
+                  <option value='software'>software</option>
+                  <option value='service'>service</option>
+                  <option value='model'>model</option>
+                  <option value='title'>title</option>
+                </select>
+              </p>
+            </fieldset>
+            <fieldset>
+              <legend><small>Target Extent</small></legend>
+              <div id="manyFocus" >
+                <p><label>
+                  <input class= "btn btn-small" type='button' /> Add spatial/temporal extent
+                </label></p>
+                <ul id='focusElementList'></ul>
+              </div>
+            </fieldset>
+            <fieldset>
+              <legend><small>Multiple targets</small></legend>
+              <div id="manyTarget">
+                <ul id='targetList'></ul>
+              </div>
+              <div id="manySecTarget">
+                <ul id='secTargetList'></ul>
+              </div>
+              <div id="manySupTarget">
+                <ul id='supTargetList'></ul>
+              </div>
+            </fieldset>
+          </div>
+          <div id="step-3">
+          <h2 class="StepTitle">User information</h2>
+            <fieldset>
+              <legend><small>User experience</small></legend>
+              <p><label >Expertise Level</label>
+                <select id="expertiseLevel">
+                  <option value='1'>Level 1: No expertise</option>
+                  <option value='2'>Level 2: Some expertise</option>
+                  <option value='3'>Level 3: Intermediate expertise</option>
+                  <option value='4'>Level 4: Advanced user</option>
+                  <option value='5'>Level 5: Expert user</option>
+                </select>
+              </p>
+              <p>
+              <label >General User Role: </label>
+              <select  id="genUserRole">
+                <option value="NonResearchEndUser">Basic User</option>
+                <option value="ResearchEndUser">Researcher</option>
+                <option value="ScientificDataProducer">Scientific Data Producer</option>
+                <option value="CommercialDataProducer">Commercial Data Producer</option>
+              </select>
+            </p>
+            <p><label > Application domain: </label></p>
+            <ul id="manyUserApplications" class="unstyled">
+              <li>
+                <div class="form-horizontal">
+                  <input class="span3" type="text" /><input type="button" class="btn" />
+                </div>
+              </li>
+            </ul>
+            </fieldset>
+            <fieldset>
+              <legend><small>User details</small></legend>
+              <p><label >User name:</label><input id='username' name='username' type='text'/></p>
+              <p><label >Organisation name:</label><input id='organisation' name='organisation' type='text'/>
+              <p><label >Position name:</label><input id='position' name='position' type='text' />
+              <label >Contact Role: </label>
+              <select  id="ciRole">
+                <option value="user">User</option>
+                <option value="resourceProvider">Resource Provider</option>
+                <option value="custodian">Researcher</option>
+                <option value="owner">Owner</option>
+                <option value="sponsor">Sponsor</option>
+                <option value="distributor">Distributor</option>
+                <option value="originator">Originator</option>
+                <option value="pointofContact">PointOfContact</option>
+                <option value="principalInvestigator">PrincipalInvestigator</option>
+                <option value="processor">Processor</option>
+                <option value="Publisher">Publisher</option>
+                <option value="author">Author</option>
+                <option value="collaborator">Collaborator</option>
+              </select>
+            </fieldset>
+          </div>
+          <div id="step-4">
+          <h2 class="StepTitle">Advanced User Feedback (optional)</h2>
+            <fieldset>
+              <legend><small>Usage feedback</small></legend>
+              <div id='manyUsageReports'><p><label><input type='button' class='btn btn-small'/> Add Usage Report</label></p>
+                <ul id='usageElementList'></ul>
+              </div>
+            </fieldset>
+            <fieldset>
+              <legend><small>References</small></legend>
+              <div id='manyExternals'><p><label><input type='button' class='btn btn-small'/> Add Online Reference</label></p>
+                <ul id='externalElementList'></ul>
+              </div>
+              <div id='manyCitations'><p><label><input type='button' class='btn btn-small'/> Add Publication</label></p>
+                <ul id='citationElementList'></ul>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+      </form>
+      </div>
+      <br><br>
+      <div id="footer">
+        <div class="container">
+          <div class="row">
+            <div class="span7"></div>
+            <img class="span1" src="geoviqua/images/logo-rgb-s.png">
+          </div>
+          <div class="row">
+            <div class="span6"></div>
+            <div class="span5">2014 S[&amp;]T Corporation - <a href="http://www.stcorp.nl">www.stcorp.nl</div>
+          </div>
+        </div>
+      </div>
+      <link rel="stylesheet" href="geoviqua/css/geoviqua_feedback.css" />
+      <link rel="stylesheet" href="other/css/jquery-ui-1.10.3.custom.min.css" />
+      <link rel="stylesheet" href="other/css/jquery-ui-timepicker-addon.css" />
+      <link rel="stylesheet" href="other/css/smart_wizard_vertical_size.css" type="text/css">
+      <script src="other/js/jquery-1.9.1.js"></script>
+      <script src="other/js/jquery-ui-1.10.3.custom.min.js"></script>
+      <script src="other/js/jquery-ui-timepicker-addon.js"></script>
+      <script src= other/js/bootstrap.min.js></script>
+      <script src="other/js/jquery.smartWizard-2.0.min.js" type="text/javascript" ></script>
+      <script src="other/js/jquery.raty.min.js" type="text/javascript" ></script>
+      <script src="geoviqua/js/feedback.js"></script>
+      <script src="geoviqua/js/configuration.js"></script>
+  </body>
+</html>

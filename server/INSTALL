@@ -1,0 +1,123 @@
+
+=================
+INSTALLATION
+=================
+
+This installation manual describes how to install the software in a Linux environment.
+
+
+The following packages are needed to create a feedbackserver instance.
+The versions indicated are the versions of the software used tested.
+
+- Python 2.7 (2.6)
+- PostgreSQL 8.4
+- virtualenv (advised)
+
+optional for production environment:
+- gunicorn
+- South
+- nginx
+
+Create a Postgres database for your feedback items.
+
+$ createdb -U postgres (or username) dbname
+
+Check out the feedbackserver.
+Create a virtual environment for the feedbackserver
+
+$ virtualenv feedbackserver_env
+
+Activate the virtual environment
+
+$ source feedbackserver_env/bin/activate
+
+Go the the feedbackserver directory and install all needed packages inside the environment.
+
+$ pip install -r requirements.txt
+
+Open /feedback/settings.py
+
+* in settings.py
+
+  - fill in the ADMINS section
+  - set the name and path of the database
+  - set the template dir (has to be an absolute path) This is the
+    installation dir + "/feedback/feedbackserver/templates and contains the 404 and 505 error pages.
+  - remove 'south' and 'gunicorn' from the installed apps list, if not used.
+  - In the LOGGING section, replace the filename with a complete filepath.
+
+Create the tables in the database
+
+$ python manage.py syncdb
+
+A super user account can be created.
+Now run the server:
+
+$ python manage.py runserver
+
+The feedback server is run locally with the development webserver of Django.
+
+=====================================
+Start working with the feedback server
+=====================================
+
+- via the Django administration tool, users (private user information, username and password)
+  can be added and granted access to the server and its functionality
+  The topic of user administration and moderation is discussed in the Notes section.
+
+- If the feedback client is used it is needed to create an anonymous user in the database. This relates
+  to the public user information, this the information that is part of user quality document (feedback item).
+  To accomodate for quick entered feedback such as comments and ratings, in an anonymous way (and low expertise level!), the first entry of the user (UserInformation element)
+  in the database is considered to be this user.
+
+- To fill the database use the feedback submission client or post directly XML or JSON via e.g. the command line tool curl:
+
+    curl -H "Content-Type:application/xml" --data-ascii @inputfeedback.xml --user username:pwd http://127.0.0.1:8000/api/v1/feedback/items/
+
+- To view at items in the database
+
+    http://127.0.0.1:8000/api/v1/feedback/items/search?format=xml
+
+For more information on the API go to http://geoviqua.stcorp.nl/server_api.html
+
+Check Notes.txt for extra information on packages used, possible future changes and integration in existing portals
+
+=====================================
+Setup for a production environment
+=====================================
+
+An example of how you can deploy the feedbackserver to run in a production environment is explained here.
+
+Download and install the following packages
+
+supervisor - For monitoring and controlling your service. Automatic startup of your server.
+Gunicorn   - A Python WSGI HTTP Server
+nginx      - A web server, used as reverse proxy, which is relatively simple to configure
+south      - optional, can be added for migration when changes are made the data model.
+
+In settings.py
+  - set DEBUG = False
+  - add gunicorn to the installed apps list
+  - add south to the installed apps list
+
+In the templates directory
+- customize the 404 and 500 pages
+
+*Quick supervisor help
+ create a file feedbackserver.conf in /etc/supervisor/conf.d/
+ set [program: ], user, directory, autostart, autorestart, stdout_logfile, sterr_logfile.
+ set command to -> location_of_feedbackserver_env/bin/gunicorn_django feedback -b servername:port
+
+====================================
+Contact
+====================================
+
+For problems when installing or questions, contact S&T (www.stcorp.nl) or directly write to:
+
+info@stcorp.nl or vandenbroek@stcorp.nl
+
+
+
+
+
+

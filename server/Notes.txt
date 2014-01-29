@@ -1,0 +1,62 @@
+====================================
+Version and software selection notes
+====================================
+
+Django 1.4 is the version used at the time. During development Django did not yet support Python 3
+Therefore also Python 2.7 is used. It should be investigated if it is useful to upgrade. Note that
+tastypie needs to be upgraded as well
+
+
+====================================
+User administration
+====================================
+
+The idea of the feedback server is that it can be integrated and connected to a GeoPortal. It is likely
+that those portals will have their own user administration system. At the time of the GeoViQua project
+discussions were just started on this topic for the GEOSS Portal. Awaiting a strategy for this, user
+administration has not been fully implemented.
+Right now the Django user administration is used. This allows someone to moderate the feedback items by deleting,
+adding users etc. It is sufficient for demonstration purposes.
+
+Some options are:
+- Single-Sign-On, and hiding the submission client in a federate.
+- Use OpenID
+
+===========================
+Simplification of the model
+===========================
+
+The mapping of the User Quality Model to a Django model, was an extensive job. Because the model allows
+so many different options and one-to-many relations some simplifications have been made. The following fields
+are XML text fields in the database:
+
+* gmd:CI_Contact/gmd:phone
+representing a gmd:CI_Telephone element
+
+* gmd:CI_Contact/gmd:address
+representing a gmd:CI_Address element.
+
+* GVQ_DataFocus/gvq:extent representing a gmd:EX_SpatialTemporalExtent
+element.
+
+* GVQ_DiscoveredIssue/gmd:alternativeDataset representing a MD_DataIdentification element.
+
+* gvq:qualityOverride representing a DQ_DataQuality element.
+
+No format checking is done on these fields and therefore they can contain erroneous xml.
+
+===================================
+Upgrades
+===================================
+
+XML and JSON validation:
+
+Full validation of posted xml files costs a lot of time, due to the complexity of the model schema.
+Therefore it is not possible to validate the files that are posted. During posting errors can be raised
+providing some information, but it is noted that on some fields errors will not be spotted or sometimes
+the information of what went wrong can be limited.
+
+Extensive upgrades:
+
+Because of the complexity of the (xml) elements Tastypie turned out not to be the most efficient
+solution for support of the REST interface. Different packages or removing Tastypie could be an option.

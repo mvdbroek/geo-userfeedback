@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Feedback search</title>
+    <link rel="stylesheet" href="geoviqua/css/geoviqua_feedback.css" />
+    <link href="other/css/bootstrap.min.css" rel="stylesheet" media="screen" />
+    <link rel="stylesheet" href="other/css/jquery-ui-1.10.3.custom.min.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="geoviqua/geoviqua.ico">
+    <script src="other/js/jquery-1.9.1.js"></script>
+    <script src="other/js/bootstrap-filestyle-0.1.0.min.js"></script>
+    <script src="other/js/jquery-ui-1.10.3.custom.min.js"></script>
+    <script src="geoviqua/js/configuration.js"></script>
+
+    <script>
+      function searchFeedback(offset) {
+
+        var fieldsData = [],
+        formElements = $('form').find('input:not([name="fields"])').serialize();
+        $('form').find('input[name="fields"]').filter(function () { return this.checked; }).each(function () {
+          fieldsData.push(this.value);
+        });
+        if (fieldsData[0]) {
+          formElements += '&fields=' + fieldsData.join(',')
+        ;}
+        user_role = $("#userRole").find(':selected').val();
+        if (user_role) { formElements += '&user_role='+ user_role;}
+        rating_value = $("#rating").find(':selected').val();
+        if (rating_value) { formElements += '&rating='+ rating_value;}
+        var limit =  $("#limit").find(':selected').val();
+        formElements += '&limit='+ limit;
+        var xhr = new XMLHttpRequest();
+        action = getServerName()+"api/v1/feedback/items/search?view=summary&format=html&" + formElements;
+        action_paginated = action + '&offset='+offset;
+
+        xhr.open("GET", action_paginated, 'true');
+        xhr.setRequestHeader('Content-Type', 'application/html; charset=UTF-8');
+        xhr.send(null);
+        xhr.onloadend = function () {
+          var text = $(xhr.responseText);
+          $.each($(text).find('[data-type="item-resource_uri"] ul li'), function(i, item)
+          {
+            var value  = item.innerHTML;
+            $(item).html('<a href="'+getServerName()+value+'?format=xml">'+value+'</a>');
+          })
+          $("#result").html($(text).find('[id = "collectionList"]'));
+
+          //Pagination
+          var total = parseInt($(text).find('[data-type="data-count"] ul li')[0].innerHTML)
+          var nextOffset = offset;
+          var prevOffset = 0;
+          var last = offset;
+          var limitInt = parseInt(limit)
+          if ((offset - limitInt) > 0 ){
+              prevOffset = (offset-limitInt);
+          }
+          if (offset < (total - limitInt) ) { nextOffset = offset+limit;}
+          if ((total-limitInt + 1) > 0) { last = total-limitInt + 1;}
+          $("#pagination").html('<div class="pagination"><ul>'
+              +'<li><a href="javascript:searchFeedback('+prevOffset+')">Prev</a></li>'
+              +'<li><a href="javascript:searchFeedback('+0+')">First</a></li>'
+              +'<li><a href="javascript:searchFeedback('+last+')">Last</a></li>'
+              +'<li><a href="javascript:searchFeedback('+nextOffset+')">Next</a></li>'
+              +'</ul></div>');
+          $("#no_items").html(total);
+
+          //Styling for feedback items.
+          $(function () {
+            $("#collectionList").accordion({
+              heightStyle: "content",
+              collapsible: "true"
+            });
+          });
+          return;
+        }
+        return;
+      }
+    </script>
+
+  </head>
+  <body>
+    <div class="page-header-st"></div>
+    <div class="container">
+    <fieldset>
+      <legend>Search for feedback</legend>
+    <form id="feedbackform"  method="get">
+      <p><label>Enter search fields:</label>
+          <input id="searchfield" name="q" class="input-xxlarge" /></p>
+        <p class="span4"><label>Specify a feedback domain:</label>
+           <input id="feedback_domain" name="feedback_domain"/></p>
+        <p><label>Specify a user domain:</label>
+          <input id="user_domain" name="user_domain"/></p>
+        <p class="span4">
+          <label>Specify a user role:</label>
+          <select  id="userRole" name="userRole">
+            <option value="">--ALL--</option>
+            <option value="NonResearchEndUser">Basic User</option>
+            <option value="ResearchEndUser">Researcher</option>
+            <option value="ScientificDataProducer">Scientific Data Producer</option>
+            <option value="CommercialDataProducer">Commercial Data Producer</option>
+          </select>
+        </p>
+        <p>
+          <label>Specify the minimum rating:</label>
+          <select id="rating" name="rating">
+            <option value="">--ALL--</option>
+            <option value="2,3,4,5">2 Stars</option>
+            <option value="3,4,5">3 Stars</option>
+            <option value="4,5">4 Stars</option>
+            <option value="5">5 Stars</option>
+          </select>
+        </p>
+        <p class="span4"><label class="radio"><input type="radio" id="check1" name="fields" value="rating" >rating</label></p>
+        <p class="span4"><label class="radio"><input type="radio" id="check2" name="fields" value="comment" >comment</label></p>
+        <p class="span4"><label class="radio"><input type="radio" id="check3" name="fields" value="citation" >citation</label></p>
+        <p class="span4"><label class="radio"><input type="radio" id="check4" name="fields" value="usage" >usage</label></p>
+      </form>
+      </fieldset>
+     <p><input type="button" onclick="searchFeedback(0)" value="Search"/></p>
+
+
+    <fieldset>
+      <legend>Catalogue results</legend>
+      <div class="row">
+        <label class="span4"> Results per page
+        <select class="span4" id="limit" name="limit">
+          <option value=5>5</option>
+          <option value=10>10</option>
+          <option value=15>15</option>
+          <option value=20>20</option>
+        </select></label>
+        <label class="span4"> Number of results:
+        <div class="span4" id="no_items"></div></label>
+        <div class="span4"  id="pagination" ></div>
+      </div>
+      <div id="result"></div>
+    </fieldset>
+    </div>
+    <br><br>
+    <div id="footer">
+      <div class="container">
+        <div class="row">
+          <div class="span5"></div>
+          <img class="span1" src="/geoviqua/images/logo-rgb-s.png">
+        </div>
+        <div class="row">
+          <div class="span4"></div>
+          <div class="span8">2014 S[&amp;]T Corporation - <a href="http://www.stcorp.nl">www.stcorp.nl</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
